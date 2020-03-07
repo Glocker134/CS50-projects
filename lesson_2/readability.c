@@ -35,10 +35,10 @@ int main(void)
         }
     }
 
-    letterAvg = (letterCount * 100) / wordCount;
-    sentenceAvg = (sentenceCount * 100) / wordCount;
+    letterAvg = round(letterCount * 100) / wordCount;
+    sentenceAvg = round(sentenceCount * 100) / wordCount;
 
-    index = round(0.0588 * letterAvg - 0.296 * sentenceAvg - 15.8);
+    index = round((0.0588 * letterAvg) - (0.296 * sentenceAvg) - 15.8);
 
     if (index < 1)
     {

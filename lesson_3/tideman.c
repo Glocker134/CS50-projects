@@ -8,6 +8,9 @@
 // preferences[i][j] is number of voters who prefer i over j
 int preferences[MAX][MAX];
 
+// Setting a flag to initialize the preferences array on first check later
+bool preferences_initialized = false;
+
 // locked[i][j] means i is locked in over j
 bool locked[MAX][MAX];
 
@@ -33,6 +36,10 @@ void add_pairs(void);
 void sort_pairs(void);
 void lock_pairs(void);
 void print_winner(void);
+
+// My added prototypes
+void initialize_preferences(void);
+
 
 int main(int argc, string argv[])
 {
@@ -114,6 +121,12 @@ bool vote(int rank, string name, int ranks[])
 // Update preferences given one voter's ranks
 void record_preferences(int ranks[])
 {
+    if (!preferences_initialized)
+    {
+        initialize_preferences();
+        preferences_initialized = true;
+    }
+
     for (int i = 0; i < candidate_count - 1; i++)
     {
         for (int j = i + 1; j < candidate_count; j++)
@@ -170,5 +183,16 @@ void print_winner(void)
 {
     // TODO
     return;
+}
+
+void initialize_preferences(void)
+{
+    for (int i = 0; i < MAX; i++)
+    {
+        for (int j = 0; j < MAX; j++)
+        {
+            preferences[i][j] = 0;
+        }
+    }
 }
 

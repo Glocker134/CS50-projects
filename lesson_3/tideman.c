@@ -41,6 +41,7 @@ void print_winner(void);
 void initialize_preferences(void);
 void merge_sort(pair array[], int left, int middle, int right);
 void merge_setup(pair array[], int left, int right);
+bool is_cycle(void);
 
 
 int main(int argc, string argv[])
@@ -159,7 +160,7 @@ void add_pairs(void)
                 pairs[count].loser = i;
             }
             count++;
-            pair_count++
+            pair_count++;
         }
     }
     return;
@@ -175,7 +176,14 @@ void sort_pairs(void)
 // Lock pairs into the candidate graph in order, without creating cycles
 void lock_pairs(void)
 {
-    // TODO
+    for (int i = 0; i < pair_count; i++)
+    {
+        locked[pairs[i].winner][pairs[i].loser] = true;
+        if (is_cycle())
+        {
+            locked[pairs[i].winner][pairs[i].loser] = false;
+        }
+    }
     return;
 }
 
@@ -195,6 +203,7 @@ void initialize_preferences(void)
             preferences[i][j] = 0;
         }
     }
+    return;
 }
 
 void merge_sort(pair array[], int left, int middle, int right)
@@ -236,21 +245,19 @@ void merge_sort(pair array[], int left, int middle, int right)
         }
         array_index++;
     }
-
     while (left_index < left_size)
     {
         array[array_index] = leftA[left_index];
         left_index++;
         array_index++;
     }
-
     while (right_index < right_size)
     {
         array[array_index] = rightA[right_index];
         right_index++;
         array_index++;
     }
-
+    return;
 }
 
 void merge_setup(pair array[], int left, int right)
@@ -263,4 +270,27 @@ void merge_setup(pair array[], int left, int right)
 
         merge_sort(array, left, middle, right);
     }
+}
+
+bool is_cycle(void)
+{
+    int i = 0;
+    int j = 1;
+    while (i < pair_count)
+    {
+        if (!locked[i][j])
+        {
+            return false;
+        }
+        else
+        {
+            i++;
+            j++;
+            if (j == pair_count)
+            {
+                j = 0;
+            }
+        }
+    }
+    return true;
 }

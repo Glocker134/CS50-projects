@@ -153,14 +153,15 @@ void add_pairs(void)
             {
                 pairs[count].winner = i;
                 pairs[count].loser = j;
+                pair_count++;
             }
             else if (preferences[j][i] > preferences[i][j])
             {
                 pairs[count].winner = j;
                 pairs[count].loser = i;
+                pair_count++;
             }
             count++;
-            pair_count++;
         }
     }
     return;
@@ -190,10 +191,40 @@ void lock_pairs(void)
 // Print the winner of the election
 void print_winner(void)
 {
-    // TODO
+    for (int i = 0; i < candidate_count; i++)
+    {
+        int count = 0;
+        int j = 0;
+        while (j < candidate_count)
+        {
+            if (j == i)
+            {
+                j++;
+            }
+            if (locked[j][i])
+            {
+                count++;
+            }
+            j++;
+        }
+        if (count == 0)
+        {
+            printf("%s\n", candidates[i]);
+            return;
+        }
+        else
+        {
+            j++;
+        }
+    }
     return;
 }
 
+// Custom functions
+//
+// -----------------------------------
+//
+// Initialize the values inside the preferences array
 void initialize_preferences(void)
 {
     for (int i = 0; i < MAX; i++)
@@ -206,6 +237,7 @@ void initialize_preferences(void)
     return;
 }
 
+// The merge sort algorithm that handles the sorting
 void merge_sort(pair array[], int left, int middle, int right)
 {
     int left_index, right_index, array_index;
@@ -230,8 +262,10 @@ void merge_sort(pair array[], int left, int middle, int right)
 
     while (left_index < left_size && right_index < right_size)
     {
-        int left_value = preferences[leftA[left_index].winner][leftA[left_index].loser] - preferences[leftA[left_index].loser][leftA[left_index].winner];
-        int right_value = preferences[rightA[right_index].winner][rightA[right_index].loser] - preferences[rightA[right_index].loser][rightA[right_index].winner];
+        int left_value = preferences[leftA[left_index].winner][leftA[left_index].loser] -
+                         preferences[leftA[left_index].loser][leftA[left_index].winner];
+        int right_value = preferences[rightA[right_index].winner][rightA[right_index].loser] -
+                          preferences[rightA[right_index].loser][rightA[right_index].winner];
 
         if (left_value >= right_value)
         {
@@ -260,6 +294,7 @@ void merge_sort(pair array[], int left, int middle, int right)
     return;
 }
 
+// The merge sort setup that divides the array in chunks
 void merge_setup(pair array[], int left, int right)
 {
     if (left < right)
@@ -272,6 +307,7 @@ void merge_setup(pair array[], int left, int right)
     }
 }
 
+// Checking if there is a cycle in the locked graph
 bool is_cycle(void)
 {
     int i = 0;

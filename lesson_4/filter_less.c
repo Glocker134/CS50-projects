@@ -1,4 +1,5 @@
 #include "helpers.h"
+#include <math.h>
 
 // Convert image to grayscale
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
@@ -10,10 +11,10 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
     {
         for (int j = 0; j < width; j++)
         {
-            int avg = (image[i][j].rgbtRed + image[i][j].rgbtGreen + image[i][j].rgbtBlue) / 3;
-            image[i][j].rgbtRed = avg;
-            image[i][j].rgbtGreen = avg;
-            image[i][j].rgbtBlue = avg;
+            float avg = round((image[i][j].rgbtRed + image[i][j].rgbtGreen + image[i][j].rgbtBlue) / 3);
+            image[i][j].rgbtRed = (int) avg;
+            image[i][j].rgbtGreen = (int) avg;
+            image[i][j].rgbtBlue = (int) avg;
         }
     }
     return;
@@ -32,17 +33,17 @@ void sepia(int height, int width, RGBTRIPLE image[height][width])
     {
         for (int j = 0; j < width; j++)
         {
-            int sepiaRed = 0.393 * image[i][j].rgbtRed + 0.769 * image[i][j].rgbtGreen + 0.189 * image[i][j].rgbtBlue;
+            int sepiaRed = round(0.393 * image[i][j].rgbtRed + 0.769 * image[i][j].rgbtGreen + 0.189 * image[i][j].rgbtBlue);
             if (sepiaRed > 255)
             {
                 sepiaRed = 255;
             }
-            int sepiaGreen = 0.349 * image[i][j].rgbtRed + 0.686 * image[i][j].rgbtGreen + 0.168 * image[i][j].rgbtBlue;
+            int sepiaGreen = round(0.349 * image[i][j].rgbtRed + 0.686 * image[i][j].rgbtGreen + 0.168 * image[i][j].rgbtBlue);
             if (sepiaGreen > 255)
             {
                 sepiaGreen = 255;
             }
-            int sepiaBlue = 0.272 * image[i][j].rgbtRed + 0.534 * image[i][j].rgbtGreen + .131 * image[i][j].rgbtBlue;
+            int sepiaBlue = round(0.272 * image[i][j].rgbtRed + 0.534 * image[i][j].rgbtGreen + .131 * image[i][j].rgbtBlue);
             if (sepiaBlue > 255)
             {
                 sepiaBlue = 255;
@@ -107,5 +108,176 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
 
     // Sides:
     // if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            int avgRed = 0;
+            int avgGreen = 0;
+            int avgBlue = 0;
+
+            // Corners in general - 4 pixels total
+            if ((i == 0 && j == 0) || (i == 0 && j == width - 1) || (i == height - 1 && j == 0) ||
+            (i == height - 1 && j == width - 1))
+            {
+                // Specific corners
+                // Top left
+                if (i == 0 && j == 0)
+                {
+                    for (int k = i; k < i + 2; k++)
+                    {
+                        for (int m = j; m < j + 2; m++)
+                        {
+                            avgRed += image[k][m].rgbtRed;
+                            avgGreen += image[k][m].rgbtGreen;
+                            avgBlue += image[k][m].rgbtBlue;
+                        }
+
+                    }
+                }
+
+                // Top right
+                else if (i == 0 && j == width - 1)
+                {
+                    for (int k = i; k < i + 2; k++)
+                    {
+                        for (int m = j - 1; m < width; m++)
+                        {
+                            avgRed += image[k][m].rgbtRed;
+                            avgGreen += image[k][m].rgbtGreen;
+                            avgBlue += image[k][m].rgbtBlue;
+                        }
+
+                    }
+                }
+
+                // Bottom left
+                else if (i == height - 1 && j == 0)
+                {
+                    for (int k = i - 1; k < height; k++)
+                    {
+                        for (int m = j; m < j + 2; m++)
+                        {
+                            avgRed += image[k][m].rgbtRed;
+                            avgGreen += image[k][m].rgbtGreen;
+                            avgBlue += image[k][m].rgbtBlue;
+                        }
+
+                    }
+                }
+
+                // Bottom right
+                else if (i == height - 1 && j == width - 1)
+                {
+                    for (int k = i - 1; k < height; k++)
+                    {
+                        for (int m = j - 1; m < width; m++)
+                        {
+                            avgRed += image[k][m].rgbtRed;
+                            avgGreen += image[k][m].rgbtGreen;
+                            avgBlue += image[k][m].rgbtBlue;
+                        }
+                    }
+                }
+
+                avgRed = round(avgRed / 4);
+                avgGreen = round(avgGreen / 4);
+                avgBlue = round(avgBlue / 4);
+            }
+
+            // Borders - 6 pixels total
+            else if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
+            {
+                // Top border
+                if (i == 0)
+                {
+                    for (int k = i; k < i + 2; k++)
+                    {
+                        for (int m = j - 1; m < j + 2; m++)
+                        {
+                            avgRed += image[k][m].rgbtRed;
+                            avgGreen += image[k][m].rgbtGreen;
+                            avgBlue += image[k][m].rgbtBlue;
+                        }
+
+                    }
+                }
+
+                // Bottom border
+                else if (i == height - 1)
+                {
+                    for (int k = i - 1; k < height; k++)
+                    {
+                        for (int m = j - 1; m < j + 2; m++)
+                        {
+                            avgRed += image[k][m].rgbtRed;
+                            avgGreen += image[k][m].rgbtGreen;
+                            avgBlue += image[k][m].rgbtBlue;
+                        }
+
+                    }
+                }
+
+                // Left border
+                else if (j == 0)
+                {
+                    for (int k = i - 1; k < i + 2; k++)
+                    {
+                        for (int m = j; m < j + 2; m++)
+                        {
+                            avgRed += image[k][m].rgbtRed;
+                            avgGreen += image[k][m].rgbtGreen;
+                            avgBlue += image[k][m].rgbtBlue;
+                        }
+
+                    }
+                }
+
+                // Right border
+                else if (j == width - 1)
+                {
+                    for (int k = i - 1; k < i + 2; k++)
+                    {
+                        for (int m = j - 1; m < width; m++)
+                        {
+                            avgRed += image[k][m].rgbtRed;
+                            avgGreen += image[k][m].rgbtGreen;
+                            avgBlue += image[k][m].rgbtBlue;
+                        }
+
+                    }
+                }
+
+                avgRed = round(avgRed / 6);
+                avgGreen = round(avgGreen / 6);
+                avgBlue = round(avgBlue / 6);
+            }
+
+            // The pixel is not part of the borders - 9 pixels total
+            else
+            {
+                for (int k = i - 1; k < i + 2; k++)
+                {
+                    for (int m = j - 1; m < j + 2; m++)
+                    {
+                        avgRed += image[k][m].rgbtRed;
+                        avgGreen += image[k][m].rgbtGreen;
+                        avgBlue += image[k][m].rgbtBlue;
+                    }
+
+                }
+
+                avgRed = round(avgRed / 9);
+                avgGreen = round(avgGreen / 9);
+                avgBlue = round(avgBlue / 9);
+
+            }
+
+            image[i][j].rgbtRed = avgRed;
+            image[i][j].rgbtGreen = avgGreen;
+            image[i][j].rgbtBlue = avgBlue;
+        }
+    }
     return;
 }

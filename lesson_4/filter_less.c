@@ -1,3 +1,6 @@
+// Implement the functions in helpers.c such that a user can apply grayscale, reflection, sepia,
+// or blur filters to their images.
+
 #include "helpers.h"
 #include <math.h>
 
@@ -103,10 +106,10 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
     // of all the pixels, so 1, 2, 3, 4, 5, 6, 7, 8, and 9. Yes, including the pixel itself.
     // In the case of 1, 3, 7, and 9, there are only 3 neighboring pixels plus itself for a total of 4.
     // In the case of 2, 4, 6, and 8, there are only 5 neighboring pixels plus itself for a total of 6.
-
+    //
     // Corners:
     // if ((i == 0 && j == 0) || (i == 0 && j == width - 1) || (i == height - 1 && j == 0) || (i == height - 1 && j == width - 1)
-
+    //
     // Sides:
     // if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
 

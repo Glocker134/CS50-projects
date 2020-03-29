@@ -1,3 +1,7 @@
+// In credit.c at right, write a program that prompts the user for a credit card number and 
+// Then reports (via printf) whether it is a valid American Express, MasterCard, or Visa 
+// Card number, per the definitions of each’s format herein. 
+
 #include <cs50.h>
 #include <stdio.h>
 

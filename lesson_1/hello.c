@@ -1,3 +1,5 @@
+// Receive the user's name and then print it on screen
+
 #include <stdio.h>
 #include <cs50.h>
 

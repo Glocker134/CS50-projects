@@ -1,3 +1,6 @@
+// Implement, in cash.c at right, a program that first asks the user how much change is owed 
+// And then prints the minimum number of coins with which that change can be made.
+
 #include <math.h>
 #include <stdio.h>
 #include <cs50.h>

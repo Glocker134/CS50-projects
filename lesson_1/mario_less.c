@@ -1,3 +1,5 @@
+// Draw a pyramid of hashes (#) of n layers, where n is a number requested by the user.
+
 #include <cs50.h>
 #include <stdio.h>
 

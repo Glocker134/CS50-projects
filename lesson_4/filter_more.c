@@ -261,15 +261,96 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
 // Detect edges
 void edges(int height, int width, RGBTRIPLE image[height][width])
 {
-    RGBTRIPLE auximage[height][width];
-    for (int a = 0; a < height; a++)
+    // Creating a copy of the image for math purposes
+    RGBTRIPLE auximage[height + 2][width + 2];
+
+    int gx_red, gx_green, gx_blue, gy_red, gy_green, gy_blue;
+
+    int gx[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+    int gy[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
+
+    for (int a = 0; a < height + 2; a++)
     {
-        for (int b = 0; b < width; b++)
+        for (int b = 0; b < width + 2; b++)
         {
-            auximage[a][b] = image[a][b];
+            // Adding a black border to the aux image
+            if (a == 0 || b == 0 || a == height + 1 || b == width + 1)
+            {
+                auximage[a][b].rgbtRed = 0;
+                auximage[a][b].rgbtGreen = 0;
+                auximage[a][b].rgbtBlue = 0;
+            }
+
+            // Else fill with the original image data
+            else
+            {
+                auximage[a][b] = image[a - 1][b - 1];
+            }
         }
     }
 
+    for (int i = 1; i < height + 1; i++)
+    {
+        for (int j = 1; j < width + 1; j++)
+        {
+
+            // Initializing Gx and Gy values
+            gx_red = 0;
+            gx_green = 0;
+            gx_blue = 0;
+
+            gy_red = 0;
+            gy_green = 0;
+            gy_blue = 0;
+
+            for (int k = i - 1; k < i + 2; k++)
+            {
+                for (int m = j - 1; m < j + 2; m++)
+                {
+                    int k_key = i - k + 1;
+                    int m_key = m - j + 1;
+
+                    // Increasing the value of each Gx and Gy variable according to the pixel RGB value
+                    // And their respective Gx/Gy multiplier
+
+                    gx_red += auximage[k][m].rgbtRed * gx[k_key][m_key];
+                    gx_green += auximage[k][m].rgbtGreen * gx[k_key][m_key];
+                    gx_blue += auximage[k][m].rgbtBlue * gx[k_key][m_key];
+
+                    gy_red += auximage[k][m].rgbtRed * gy[k_key][m_key];
+                    gy_green += auximage[k][m].rgbtGreen * gy[k_key][m_key];
+                    gy_blue += auximage[k][m].rgbtBlue * gy[k_key][m_key];
+                }
+            }
+
+            // Calculating the theta of the red, green, and blue channels
+            double thetaRed = pow(gx_red, 2.0) + pow(gy_red, 2.0);
+            thetaRed = round(sqrt(thetaRed));
+            if (thetaRed > 255)
+            {
+                thetaRed = 255;
+            }
+
+            double thetaGreen = pow(gx_green, 2.0) + pow(gy_green, 2.0);
+            thetaGreen = round(sqrt(thetaGreen));
+            if (thetaGreen > 255)
+            {
+                thetaGreen = 255;
+            }
+
+            double thetaBlue = pow(gx_blue, 2.0) + pow(gy_blue, 2.0);
+            thetaBlue = round(sqrt(thetaBlue));
+            if (thetaBlue > 255)
+            {
+                thetaBlue = 255;
+            }
+
+            // Updating the image
+            image[i - 1][j - 1].rgbtRed = (int) thetaRed;
+            image[i - 1][j - 1].rgbtGreen = (int) thetaGreen;
+            image[i - 1][j - 1].rgbtBlue = (int) thetaBlue;
+        }
+    }
 
     return;
 }

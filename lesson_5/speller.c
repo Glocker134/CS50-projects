@@ -4,6 +4,8 @@
 
 #include "dictionary.h"
 
+#define HASHTABLE 100
+
 // Represents a node in a hash table
 typedef struct node
 {
@@ -28,8 +30,16 @@ bool check(const char *word)
 // Hashes word to a number
 unsigned int hash(const char *word)
 {
-    // TODO
-    return 0;
+    // djb2 hash function by Daniel J. Bernstein. Case-insensitive.
+    // Source: http://www.cse.yorku.ca/~oz/hash.html
+    unsigned long hash = 5381;
+    int c;
+
+    while ((c = *word++))
+    {
+        hash = ((hash << 5) + hash) + tolower(c);
+    }
+    return hash % HASHTABLE;
 }
 
 // Loads dictionary into memory, returning true if successful else false

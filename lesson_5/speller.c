@@ -15,7 +15,12 @@ typedef struct node
 node;
 
 // Number of buckets in hash table
-const unsigned int N = 1;
+// Ideally, the size of a hash table should be 1.3 times the maximum number of keys that
+// Will be in the table, and it should also be a prime number.
+// Source: http://cseweb.ucsd.edu/~kube/cls/100/Lectures/lec16/lec16-8.html
+// The large dictionary has 143091 entries. 1.3 times is 186018, which is not a prime.
+// The closest prime is 186019, which will be the maximum number of buckets in the hash table.
+const unsigned int N = 186019;
 
 // Hash table
 node *table[N];
@@ -23,7 +28,24 @@ node *table[N];
 // Returns true if word is in dictionary else false
 bool check(const char *word)
 {
-    // TODO
+    char *aux = strdup(word);
+
+    // Changing aux to lowercase
+    char *lower = aux;
+    while(*lower)
+    {
+        *lower = tolower(*lower);
+        lower++;
+    }
+
+    for (node *helper = table[hash(word)]; helper != NULL; helper = helper->next)
+    {
+        if (strcmp(aux, helper->word) == 0)
+        {
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -39,7 +61,7 @@ unsigned int hash(const char *word)
     {
         hash = ((hash << 5) + hash) + tolower(c);
     }
-    return hash % HASHTABLE;
+    return hash % N;
 }
 
 // Loads dictionary into memory, returning true if successful else false

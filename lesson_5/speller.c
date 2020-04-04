@@ -1,6 +1,11 @@
 // Implements a dictionary's functionality
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include <strings.h>
+#include <ctype.h>
 
 #include "dictionary.h"
 
@@ -25,25 +30,20 @@ const unsigned int N = 186019;
 // Hash table
 node *table[N];
 
+// Dictionary size - it's updated as new words are added to it via load
+unsigned int dictionary_size = 0;
+
 // Returns true if word is in dictionary else false
 bool check(const char *word)
 {
-    char *aux = strdup(word);
-
-    // Changing aux to lowercase
-    char *lower = aux;
-    while(*lower)
+    node *helper = table[hash(word)];
+    while (helper != NULL)
     {
-        *lower = tolower(*lower);
-        lower++;
-    }
-
-    for (node *helper = table[hash(word)]; helper != NULL; helper = helper->next)
-    {
-        if (strcmp(aux, helper->word) == 0)
+        if (strcasecmp(word, helper->word) == 0)
         {
             return true;
         }
+        helper = helper->next;
     }
 
     return false;
@@ -67,20 +67,48 @@ unsigned int hash(const char *word)
 // Loads dictionary into memory, returning true if successful else false
 bool load(const char *dictionary)
 {
-    // TODO
-    return false;
+    FILE *file = fopen(dictionary, "r");
+    if (file == NULL)
+    {
+        return false;
+    }
+
+    char str[LENGTH + 1];
+    while (fscanf(file, "%s", str) != EOF)
+    {
+        int index = hash(str);
+        node *item = malloc(sizeof(node));
+        strcpy(item->word, str);
+        item->next = table[index];
+        table[index] = item;
+        dictionary_size++;
+    }
+
+    fclose(file);
+
+    return true;
 }
 
 // Returns number of words in dictionary if loaded else 0 if not yet loaded
 unsigned int size(void)
 {
-    // TODO
-    return 0;
+    return dictionary_size;
 }
 
 // Unloads dictionary from memory, returning true if successful else false
 bool unload(void)
 {
-    // TODO
-    return false;
+    for (int i = 0; i < N; i++)
+    {
+        node *check = table[i];
+        while (check != NULL)
+        {
+            node *tmp = check;
+            check = check->next;
+            free(tmp);
+        }
+    }
+    return true;
 }
+
+

@@ -1,6 +1,46 @@
+body
+{
+    color: #212121;
+}
+
+hr
+{
+    color: #BDBDBD;
+}
+
+.title
+{
+    background-color: #CFD8DC;
+    text-align: center;
+}
+
+.button-div
+{
+    text-align: center;
+}
+
+.info-btn
+{
+    top: 50%;
+}
+
+.box-title
+{
+    text-align: center;
+}
+
+.info-box
+{
+    border-radius: 3%;
+    background-color: #CFD8DC;
+    padding: 20px;
+    margin: 8px;
+    text-align: justify;
+}
+
 #main-header
 {
-    background-color: rgb(69, 69, 69);
+    background-color: #455A64;
     overflow: hidden;
 
 }
@@ -19,7 +59,7 @@
 
 #main-header a
 {
-    color: #f2f2f2;
+    color: #FFFFFF;
     text-align: center;
     padding: 15px 12px;
     text-decoration: none;
@@ -28,17 +68,12 @@
 
 #main-header a:hover
 {
-    background-color: rgb(194, 77, 4);
-    color: white;
+    background-color: #CFD8DC;
+    color: #757575;
 }
 
 #main-title
 {
     text-align: center;
     padding: 10px;
-}
-
-p
-{
-    text-align: center;
 }

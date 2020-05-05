@@ -17,12 +17,13 @@ footer
     background-color: #d4d4d4;
     color: black;
     text-align: center;
+    margin-top: -50px;
 }
 
 .page-content
 {
-    position: relative;
     min-height: 100%;
+    margin-bottom: 50px;
 }
 
 .title
@@ -53,6 +54,12 @@ footer
     padding: 20px;
     margin: 8px;
     text-align: justify;
+}
+
+.carousel img
+{
+    width: 600px;
+    height:438px;
 }
 
 #main-header

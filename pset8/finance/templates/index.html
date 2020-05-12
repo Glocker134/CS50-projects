@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+C$50 Finance
+{% endblock %}
+
+{% block main %}
+<table>
+    <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Shares</th>
+        <th>Price</th>
+        <th>Total</th>
+    </tr>
+    {% for item in rows %}
+    <tr>
+        <td>{{ item["symbol"] }}</td>
+        <td>{{ item["name"] }}</td>
+        <td>{{ item["shares"] }}</td>
+        <td>{{ item["price"] }}</td> <!-- THIS MUST BE UPDATED TO THE CURRENT SHARE VALUE!! -->
+        <td>{{ item["total"] }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td>CASH</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>{{ wallet }}</td>
+    </tr>
+</table>
+
+<p><em>Total: {{ total }}</em></p>
+<!-- TODO: Total thingie-->
+{% endblock %}

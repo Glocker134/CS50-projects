@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Quote: {{ symbol }}
+{% endblock %}
+
+{% block main %}
+<p>A share unit for {{ symbol }} is currently priced at {{ value }}.</p>
+{% endblock %}

@@ -46,7 +46,7 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    return apology("TODO")
+    return render_template("/")
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -115,7 +115,16 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    return apology("TODO")
+    if request.method == "POST":
+        symbol = request.form.get("symbol")
+        if symbol == None or symbol == "":
+            return apology("Must provide a symbol", 400)
+        else:
+            quote = lookup(symbol)
+            value = quote["price"]
+            return render_template("/quoted", value=value, symbol=symbol)
+    else:
+        return render_template("/quote")
 
 
 @app.route("/register", methods=["GET", "POST"])

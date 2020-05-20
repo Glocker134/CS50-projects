@@ -46,7 +46,8 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    return render_template("/")
+    rows = db.execute("SELECT * FROM portfolios WHERE username = :username")
+    return render_template("index.html")
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -121,10 +122,9 @@ def quote():
             return apology("Must provide a symbol", 400)
         else:
             quote = lookup(symbol)
-            value = quote["price"]
-            return render_template("/quoted", value=value, symbol=symbol)
+            return render_template("quoted.html", value=quote["price"], symbol=symbol, name=quote["name"])
     else:
-        return render_template("/quote")
+        return render_template("quote.html")
 
 
 @app.route("/register", methods=["GET", "POST"])

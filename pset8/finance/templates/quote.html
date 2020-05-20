@@ -1,16 +1,16 @@
 {% extends "layout.html" %}
 
-{% block title%}
+{% block title %}
 Quote
 {% endblock %}
 
 {% block main %}
 
-<form action="/quoted" method="POST">
+<form action="/quote" method="POST">
     <div class="form-group">
         <input type="text" autocomplete="off" name="symbol" placeholder="Symbol (i.e.: AAPL)...">
     </div>
-    <button class="btn btn-primary" type="submit">Get quote</button>   
+    <button class="btn btn-primary" type="submit">Get quote</button>
 </form>
 
 {% endblock %}
